@@ -44,7 +44,7 @@ class Main {
     this.b = new Boid(this, vector2d(300, 300));
 
     this.boids = [];
-    this.numBoids = 100;
+    this.numBoids = 20;
     //create all initial items
     this.init();
 
@@ -94,7 +94,7 @@ class Main {
        // place a button image on the button
        var buttImg = new Image();
        buttImg.src = "buttons/mb01.png";
-       buttImg.id = "bi";
+       buttImg.id = i;
        button.appendChild(buttImg);
        //  Add event listeners to images (not buttons)
        buttImg.addEventListener('mouseover',buttonMouseOverHandler,false);
@@ -125,5 +125,25 @@ function buttonMouseOutHandler(){
 }
 
 function buttonMouseClickHandler(){
-  main.makeRect = !main.makeRect;
+  if(this.id == 0) {
+    for(let i = 0; i < main.boids.length; i++){
+      main.boids[i].applyForce(vector2d(Math.random()*5 - 0.25, Math.random()*5 - 0.25));
+    }
+  }else if (this.id == 1) {
+    for(let i = 0; i < main.boids.length; i++){
+      this.boid[i]
+    }
+  }else if (this.id == 2) {
+    for(let i = 0; i < main.boids.length; i++){
+      this.boid[i]
+    }
+  }else if (this.id == 3) {
+    for(let i = 0; i < main.boids.length; i++){
+      this.boid[i]
+    }
+  }else if (this.id == 4) {
+    for(let i = 0; i < main.boids.length; i++){
+      this.boid[i]
+    }
+  }
 }
