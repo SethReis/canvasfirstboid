@@ -4,7 +4,7 @@
 window.addEventListener('load', setup, false);
 
 var main;   // the global Main object
-const FRAME_RATE=60;
+const FRAME_RATE=30;
 
 function setup() {
   main = new Main();
@@ -40,11 +40,12 @@ class Main {
     //End create a canvas element ++++++++++++++++++++++++++++++++
     // declare instance variables for main
     this.menuButtons = [];
+    this.repeller;
+    this.attracter;
     this.makeRect = false;
     this.b = new Boid(this, vector2d(300, 300));
-
     this.boids = [];
-    this.numBoids = 20;
+    this.numBoids = 2;
     //create all initial items
     this.init();
 
@@ -59,8 +60,8 @@ class Main {
     this.canvas.addEventListener('click', this.handleCNVMouseClicked, false);
 
     for(let i = 0; i < this.numBoids; i++){
-      var location = vector2d(Math.random()*this.canvas.width, Math.random()*this.canvas.height)
-      this.boids.push(new Boid(this, location))
+      var location = vector2d(Math.random()*this.canvas.width, Math.random()*this.canvas.height);
+      this.boids.push(new Boid(this, location));
     }
     // create menu buttons
     this.createMenuButtons();
@@ -72,7 +73,7 @@ class Main {
   }
 
   render() { // render or draw stuff to canvas
-    this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
+    //this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
     for(let i = 0; i < this.boids.length; i++){
       this.boids[i].run();
     }
@@ -80,11 +81,12 @@ class Main {
       this.context.fillStyle = '#554499';
       this.context.fillRect(10, 10, 100, 100);
     }
+    if(this.repeller) this.repeller.run();
+    if(this.attracter) this.attracter.run();
 
   }
   //  +++++++++++++++++++++++++++++++++  create buttons for menu area
   createMenuButtons(){
-
      var numButtons = 5;
      //create and style all button divs
      for(let i = 0; i < numButtons; i++){
@@ -104,13 +106,19 @@ class Main {
        button.style.float = "left";
        button.style.marginTop = "5px";
        button.style.marginLeft = "85px";
-
        //push button into buttons array
        this.menuButtons.push(button);
      }
 
   }   // end createMenuButtons
 
+  addRepeller(){
+    main.repeller = new Repeller(this, vector2d(Math.random()*this.canvas.width, Math.random()*this.canvas.height));
+  }
+
+  addAttracter(){
+    main.attracter = new Attracter(this, vector2d(Math.random()*this.canvas.width, Math.random()*this.canvas.height));
+  }
 
 }//  end main class ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // add functionality to your buttons here
@@ -127,23 +135,19 @@ function buttonMouseOutHandler(){
 function buttonMouseClickHandler(){
   if(this.id == 0) {
     for(let i = 0; i < main.boids.length; i++){
-      main.boids[i].applyForce(vector2d(Math.random()*5 - 0.25, Math.random()*5 - 0.25));
+      main.boids[i].applyForceV(Math.random()*0.5+0.25, Math.random()*0.5+0.25);
     }
   }else if (this.id == 1) {
     for(let i = 0; i < main.boids.length; i++){
-      this.boid[i]
+      this.boids[i].color = this.boids[i].getColor();
     }
   }else if (this.id == 2) {
     for(let i = 0; i < main.boids.length; i++){
-      this.boid[i]
+      this.boids[i]
     }
   }else if (this.id == 3) {
-    for(let i = 0; i < main.boids.length; i++){
-      this.boid[i]
-    }
+    main.addRepeller();
   }else if (this.id == 4) {
-    for(let i = 0; i < main.boids.length; i++){
-      this.boid[i]
-    }
+    main.addAttracter();
   }
 }

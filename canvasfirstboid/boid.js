@@ -7,6 +7,8 @@ class Boid {
   constructor(m, location) {
     this.color = this.getColor();
     // declare instance variables for Boid
+    this.forceX = 1;
+    this.forceY = 1;
     this.main = m;
     this.loc = location;
     this.vel = vector2d(Math.random()*10 - 5, Math.random()*10 - 5);
@@ -35,11 +37,31 @@ class Boid {
   }
   update() { // render or draw this to canvas
     this.checkEdges();
+    if(main.repeller){
+      if(this.loc.dist(main.repeller.loc) < 300){
+        this.repForce = this.loc.subtraction(main.repeller.loc);
+        this.repForce.normalize();
+        this.repForce.x *= 1.5;
+        this.repForce.y *= 1.5;
+        this.applyForceV(this.repForce);
+      }
+    }
+    if(main.attracter){
+      if(this.loc.dist(main.attracter.loc) < 300){
+        this.attForce = this.loc.subtraction(main.attracter.loc);
+        this.attForce.normalize();
+        this.attForce.x *= 1.5;
+        this.attForce.y *= 1.5;
+        this.applyForceV(this.attForce);
+      }
+    }
     this.vel.add(this.acc);
-    //ths.vel.normalize()*3;
+    this.vel.normalize()*3;
     this.loc.add(this.vel);
-    this.acc.x *= 0;
-    this.acc.y *= 0;
+    this.applyForceV(vector2d(this.forceX, this.forceY));
+    console.log("loc.x = " + this.loc.x);
+    //this.acc.x *= 0;
+    //this.acc.y *= 0;
   }
   render() { // render or draw this to canvas
     //console.log("loc.x = " + this.loc.x);
@@ -56,7 +78,14 @@ class Boid {
     if(this.loc.y > 750 ||this.loc.y < 10) this.vel.y *= -1;
   }
 
-  applyForce(force){
+  changeForce(x, y){
+    this.forceX += x;
+    this.forceY += y;
+    this.applyForceV(vector2d(this.forceX, this.forceY));
+  }
+
+  applyForceV(force){
     this.acc.add(force);
+    this.run();
   }
 }

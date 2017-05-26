@@ -15,6 +15,11 @@ var vector2d = function (vx, vy) {
         x: vx,
         y: vy,
 
+        subtraction: function(v1){
+          var temp = v1.copy();
+          return temp.sub(vector2d(this.x, this.y));
+        },
+
         // scale() method allows us to scale the vector
         // either up or down.
         scale: function (scale) {
